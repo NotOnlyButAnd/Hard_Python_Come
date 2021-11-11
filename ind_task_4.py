@@ -1,14 +1,21 @@
 from math import sqrt
 
+
 class Rectangle(object):
     id = "no_id"
     left_down_corner = (0.0, 0.0)
     right_upper_corner = (1.0, 1.0)
 
     def __init__(self, id, left_corn, right_corn):
-        self.id = id
-        self.left_down_corner = left_corn
-        self.right_upper_corner = right_corn
+        try:
+            if left_corn[0] == right_corn[0] or left_corn[1] == right_corn[1]:
+                raise ValueError("Углы находятся на одной линии!!!")
+            else:
+                self.id = id
+                self.left_down_corner = left_corn
+                self.right_upper_corner = right_corn
+        except ValueError as Argument:
+            print(f"\n!!!!!!!!ИСКЛЮЧЕНИЕ!!!!!!!!\n {Argument}")
 
     def square(self):
         return (self.right_upper_corner[0] - self.left_down_corner[0]) *\
@@ -24,12 +31,19 @@ class Pentagon(object):
     vertexes = []
 
     def __init__(self, id, v1, v2, v3, v4, v5):
-        self.id = id
-        self.vertexes.append(v1)
-        self.vertexes.append(v2)
-        self.vertexes.append(v3)
-        self.vertexes.append(v4)
-        self.vertexes.append(v5)
+        try:
+            self.id = id
+            self.vertexes.append(v1)
+            self.vertexes.append(v2)
+            self.vertexes.append(v3)
+            self.vertexes.append(v4)
+            self.vertexes.append(v5)
+            for i in range(len(self.vertexes)):
+                for j in range(i, len(self.vertexes)):
+                    if self.vertexes[i][0] == self.vertexes[j][0] and self.vertexes[i][1] == self.vertexes[j][1]:
+                        raise ValueError("Упс! Две одинаковые точки!")
+        except ValueError as Argument:
+            print(f"\n!!!!!!!!ИСКЛЮЧЕНИЕ!!!!!!!!\n {Argument}")
 
     # по формуле гаусса
     def square(self):
@@ -46,7 +60,7 @@ class Pentagon(object):
 
 
 # здесь могут быть объекты, для которых нет метода SQUARE - проверка нужна
-def compare(obj1, obj2):
+def compare(obj1: Rectangle, obj2: Pentagon):
     sq1 = obj1.square()
     sq2 = obj2.square()
     if sq1 > sq2:
@@ -74,7 +88,7 @@ def isInclude(rect: Rectangle, pent: Pentagon):
     return flag
 
 
-rect1 = Rectangle("rectangle_1", (0.0, 0.0), (2.0, 2.0))
+rect1 = Rectangle("rectangle_1", (0.0, 0.0), (0.0, 2.0))
 rect1.print_info()
 print(f"Square of {rect1.id}: {rect1.square()}")
 
@@ -84,7 +98,7 @@ print(f"Square of {rect2.id}: {rect2.square()}")
 
 compare(rect1, rect2)
 
-pent1 = Pentagon("pentagon_1", (0.0, 0.0), (0.0, 1.0), (1.0, 2.0), (3.0, 1.0), (2.0, 0.0))
+pent1 = Pentagon("pentagon_1", (0.0, 0.0), (0.0, 1.0), (1.0, 2.0), (3.0, 1.0), (0.0, 0.0))
 pent1.print_info()
 print(pent1.square())
 
