@@ -1,0 +1,80 @@
+<data>
+    <table name="animal">
+        <entry>
+            <field>1</field>
+            <field>Abessinian cat</field>
+            <field>A desert-colored cat, very beautiful</field>
+            <field>1</field>
+            <field>4</field>
+        </entry>
+        <entry>
+            <field>2</field>
+            <field>German shepherd</field>
+            <field>Very strong and smart dog</field>
+            <field>2</field>
+            <field>2</field>
+        </entry>
+        <entry>
+            <field>3</field>
+            <field>&#1057;hihuahua</field>
+            <field>Small and very freaky dog</field>
+            <field>2</field>
+            <field>2</field>
+        </entry>
+        <entry>
+            <field>4</field>
+            <field>Doberman</field>
+            <field>Angry and tall dog</field>
+            <field>2</field>
+            <field>1</field>
+        </entry>
+        <entry>
+            <field>5</field>
+            <field>&#1050;&#1086;&#1088;&#1075;&#1080;</field>
+            <field>&#1052;&#1080;&#1083;&#1099;&#1081; &#1080; &#1087;&#1091;&#1096;&#1080;&#1089;&#1090;&#1099;&#1081; &#1084;&#1072;&#1083;&#1099;&#1096;</field>
+            <field>2</field>
+            <field>2</field>
+        </entry>
+        <entry>
+            <field>6</field>
+            <field>&#1040;&#1083;&#1072;&#1073;&#1072;&#1081;</field>
+            <field>&#1041;&#1054;&#1051;&#1068;&#1064;&#1054;&#1049; &#1055;&#1045;&#1057;&#1050;&#1040;</field>
+            <field>2</field>
+            <field>1</field>
+        </entry>
+    </table>
+    <table name="habitat">
+        <entry>
+            <field>1</field>
+            <field>Forest</field>
+        </entry>
+        <entry>
+            <field>2</field>
+            <field>House</field>
+        </entry>
+        <entry>
+            <field>3</field>
+            <field>Jungle</field>
+        </entry>
+        <entry>
+            <field>4</field>
+            <field>Africa</field>
+        </entry>
+    </table><table name="type_animal">
+    <entry>
+        <field>1</field>
+        <field>Not friendly, lazy</field>
+        <field>Cat</field>
+    </entry>
+    <entry>
+        <field>2</field>
+        <field>Friendly, activity</field>
+        <field>Dog</field>
+    </entry>
+    <entry>
+        <field>3</field>
+        <field>Silent, wet</field>
+        <field>Fish</field>
+    </entry>
+</table>
+</data>'

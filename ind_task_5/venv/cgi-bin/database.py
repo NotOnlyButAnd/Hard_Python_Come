@@ -1,5 +1,5 @@
 import sqlite3
-
+import os
 
 # вывод названий всех таблиц БД через соединение con
 def sql_fetch(con):
@@ -123,5 +123,153 @@ print(f"\nANIMALS!:: {cursor.fetchall()}")
 
 # вывод названий всех таблиц БД
 sql_fetch(connection)
+
+
+##################################
+# ЭКСПОРТ В XML
+##################################
+import xml.etree.ElementTree as Etree
+
+# Создание структуры файла
+direct = os.path.abspath(__file__)
+file = open(direct[:len(direct) - 11:] + 'Data.xml', 'w')
+
+# Определение корня
+data = Etree.Element('data')
+
+###################################################################
+
+# Определение таблицы Животное как потомка корня
+table = Etree.SubElement(data, 'table')
+table.set('name', 'animal')
+
+# Извлечение данных из таблицы Животное
+cursor.execute("SELECT * FROM animal")
+animals = cursor.fetchall()
+
+# Создание структуры записей как потомков таблицы Животное
+for row in animals:
+    entry = Etree.SubElement(table, 'entry')
+
+    # Поля записи
+    id = Etree.SubElement(entry, 'field')
+    name = Etree.SubElement(entry, 'field')
+    description = Etree.SubElement(entry, 'field')
+    type = Etree.SubElement(entry, 'field')
+    habitat = Etree.SubElement(entry, 'field')
+
+    id.text = str(row[0])
+    name.text = str(row[1])
+    description.text = str(row[2])
+    type.text = str(row[3])
+    habitat.text = str(row[4])
+
+###################################################################
+
+# Определение таблицы Среда обитания как потомка корня
+table = Etree.SubElement(data, 'table')
+table.set('name', 'habitat')
+
+# Извлечение данных из таблицы Среда обитания
+cursor.execute("SELECT * FROM habitat")
+habitats = cursor.fetchall()
+
+# Создание структуры записей как потомков таблицы Среда обитания
+for row in habitats:
+    entry = Etree.SubElement(table, 'entry')
+
+    # Поля записи
+    id = Etree.SubElement(entry, 'field')
+    name = Etree.SubElement(entry, 'field')
+
+    id.text = str(row[0])
+    name.text = str(row[1])
+
+###################################################################
+
+# Определение таблицы Вид животного как потомка корня
+table = Etree.SubElement(data, 'table')
+table.set('name', 'type_animal')
+
+# Извлечение данных из таблицы Вид животного
+cursor.execute("SELECT * FROM type_animal")
+types = cursor.fetchall()
+
+# Создание структуры записей как потомков таблицы Вид животного
+for row in types:
+    entry = Etree.SubElement(table, 'entry')
+
+    # Поля записи
+    id = Etree.SubElement(entry, 'field')
+    name = Etree.SubElement(entry, 'field')
+    description = Etree.SubElement(entry, 'field')
+
+    id.text = str(row[0])
+    name.text = str(row[1])
+    description.text = str(row[2])
+
+###################################################################
+
+# Экспорт в файл
+# какие-то два символа - b' - ставит в начале и при парсинге не может прочитать
+# и еще в конце кавычка, поэтому ее тоже удаляем нафиг
+# вручную насильно отрезаем их из table_data
+table_data = str(Etree.tostring(data))
+print(f"TABLE DATA: {table_data[2:len(table_data) - 1:]}")
+file.write(table_data[2:len(table_data) - 1:])
+file.close()
+
+# вывод данных из таблиц до импорта из xml
+print("\nДО ИМПОРТА :\n")
+cursor.execute("SELECT * FROM animal")
+print(f"animal: {cursor.fetchall()}")
+
+cursor.execute("SELECT * FROM habitat")
+print(f"habitat: {cursor.fetchall()}")
+
+cursor.execute("SELECT * FROM type_animal")
+print(f"type_animal: {cursor.fetchall()}")
+
+# Импорт из файла
+tree = Etree.parse(direct[:len(direct) - 11:] + 'Data.xml')
+root = tree.getroot()
+
+for table in root:
+    if table.get('name') == 'animal':
+        for entry in table:
+            # id = entry[0].text
+            name = entry[1].text
+            description = entry[2].text
+            type = entry[3].text
+            habitat = entry[4].text
+            cursor.execute("INSERT INTO animal(animal_name, description, animal_type_ID, animal_habitat_ID) VALUES(?, ?, ?, ?)",
+                           (name, description, type, habitat))
+
+    # почему-то здесь с одним столбцом не срабатывает нормально через валуес. пришлось колхозить
+    elif table.get('name') == 'habitat':
+        for entry in table:
+            # id = entry[0].text
+            name = entry[1].text
+            query = "INSERT INTO habitat(habitat_name) VALUES ('" + name + "')"
+            print(f"||||||{name}||||||{query}|||||||")
+            cursor.execute(query)
+
+    elif table.get('name') == 'type_animal':
+        for entry in table:
+            # id = entry[0].text
+            name = entry[1].text
+            description = entry[2].text
+            cursor.execute("INSERT INTO type_animal(type_name, description ) VALUES(?, ?)", (name, description))
+
+# вывод данных из таблиц ПОСЛЕ импорта из xml
+print("\nПОСЛЕ ИМПОРТА :\n")
+cursor.execute("SELECT * FROM animal")
+print(f"animal: {cursor.fetchall()}")
+
+cursor.execute("SELECT * FROM habitat")
+print(f"habitat: {cursor.fetchall()}")
+
+cursor.execute("SELECT * FROM type_animal")
+print(f"type_animal: {cursor.fetchall()}")
 
 connection.close()
